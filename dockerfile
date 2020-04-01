@@ -57,19 +57,21 @@ RUN wget --no-verbose -O payara.zip ${PAYARA_PKG} && \
     ${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} start-domain ${DOMAIN_NAME} && \
     ${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} enable-secure-admin && \    
     for MEMORY_JVM_OPTION in $(${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} list-jvm-options | grep "Xm[sx]"); do\
-        ${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} delete-jvm-options $MEMORY_JVM_OPTION;\
+    ${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} delete-jvm-options $MEMORY_JVM_OPTION;\
     done && \
     ${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} create-jvm-options '-XX\:+UseContainerSupport:-XX\:MaxRAMPercentage=80' && \
     ${PAYARA_DIR}/bin/asadmin --user=${ADMIN_USER} --passwordfile=${PASSWORD_FILE} stop-domain ${DOMAIN_NAME} && \
     # Cleanup unused files
     rm -rf \
-        /tmp/tmpFile \
-        payara.zip \
-        ${PAYARA_DIR}/glassfish/domains/${DOMAIN_NAME}/osgi-cache \
-        ${PAYARA_DIR}/glassfish/domains/${DOMAIN_NAME}/logs \
-        ${PAYARA_DIR}/glassfish/domains/domain1
+    /tmp/tmpFile \
+    payara.zip \
+    ${PAYARA_DIR}/glassfish/domains/${DOMAIN_NAME}/osgi-cache \
+    ${PAYARA_DIR}/glassfish/domains/${DOMAIN_NAME}/logs \
+    ${PAYARA_DIR}/glassfish/domains/domain1
 
+# Copy across docker scripts
 COPY --chown=payara:payara bin/*.sh ${SCRIPT_DIR}/
-RUN chmod +x ${SCRIPT_DIR}/*
+RUN mkdir -p ${SCRIPT_DIR}/init.d && \
+    chmod +x ${SCRIPT_DIR}/*
 
-CMD ${SCRIPT_DIR}/startInForeground.sh $PAYARA_ARGS
+CMD ${SCRIPT_DIR}/entrypoint.sh
