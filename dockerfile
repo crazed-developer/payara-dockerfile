@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Default payara ports to expose
 # 4848: admin console
@@ -7,7 +7,7 @@ FROM ubuntu:18.04
 # 8181: https
 EXPOSE 4848 9009 8080 8181
 
-ARG PAYARA_VERSION=5.201
+ARG PAYARA_VERSION=5.2020.3
 ARG PAYARA_PKG=https://search.maven.org/remotecontent?filepath=fish/payara/distributions/payara/${PAYARA_VERSION}/payara-${PAYARA_VERSION}.zip
 ARG ADMIN_PASS=admin
 
