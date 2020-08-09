@@ -39,8 +39,11 @@ RUN groupadd -g 1000 payara && \
     chown -R payara: ${HOME_DIR} && \
     # Install required packages
     apt-get update && \
-    apt-get install -y wget unzip openjdk-11-jre-headless && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y wget unzip openjdk-11-jre-headless locales && \
+    rm -rf /var/lib/apt/lists/* && \
+    localedef -i en_DK -c -f UTF-8 -A /usr/share/locale/locale.alias en_DK.UTF-8
+ENV LANG en_DK.utf8
+    
 
 USER payara
 WORKDIR ${HOME_DIR}
